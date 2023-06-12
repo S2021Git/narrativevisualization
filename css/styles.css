@@ -1,0 +1,103 @@
+
+
+div.tooltip {
+  position:absolute;
+  text-align: center;
+  padding: 3px;
+  border: 0px;
+  border-radius: 5px;
+  pointer-events: none;
+  background: #7F7B79;
+  color: #F4F6F7;
+  font-size: 1.5rem;
+}
+
+
+
+.age_range {
+  margin: 10px 0px 30px;
+  width: 100%;
+  display:flex;
+}
+
+.potential_range {
+  margin: 10px 0px 30px;
+  width: 100%;
+  display:flex;
+}
+
+.overall_range {
+  margin: 10px 0px 30px;
+  width: 100%;
+  display:flex;
+}
+
+.button{
+  background-color:#D3CEDF;
+  color:#5D6D7E;
+  padding:2px;
+  border-radius:7px;
+  position: relative;
+  font-size: 1.0rem;
+}
+.space{
+  width: 10px;
+  height:auto;
+  display: inline-block;
+}
+
+h1 {
+  color: #5584AC;
+}
+
+h2 {
+  color: #5584AC;
+}
+
+p {
+  font-size: 1.5rem;
+  color: #5584AC;
+}
+svg {
+  position: absolute;
+  left: 500px;
+  top: 100px;
+}
+
+div.overall_range{
+  color: #5584AC;
+  font-size: 1.5rem;
+}
+
+div.age_range{
+  color: #5584AC;
+  font-size: 1.5rem;
+}
+
+div.potential_range{
+  color: #5584AC;
+  font-size: 1.5rem;
+}
+
+
+.max_box {
+  font-size: 1.5rem;
+  margin-left: 10px;
+
+}
+
+.highlight {
+  font-weight: bold;
+  font-style: italic;
+}
+
+input[type=number], numberarea
+{
+
+    background: #E5E7E9;
+    padding:1px;
+    border-radius:7px;
+    border-color: #808B96;
+    font-size: 1.3rem;
+
+}

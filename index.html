@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-annotation/2.5.1/d3-annotation.min.js"></script>
+<style> circle {stroke: black;} </style>
+
+
+
+<head>
+  <meta charset="utf-8">
+  <title>FIFA 21 Narrative Visualization</title>
+  <link rel="stylesheet" href="css/styles.css">
+
+
+
+</head>
+
+<body onload='init()' style="background-color:#F9EBEA">
+
+  <h1>Scene1: Average Age vs Average Potential vs Average Overall</h1>
+<h2>FIFA Footbal is a well known sport game which let the user to simulate real world soccer players. This visulization is based on FIFA 2021 data set which contains data of players rating, age, nationality, etc  </h2>
+  <p>The chart below shows an overview of the players average age vs average potential vs average overall rating. The bigger the dot means the higher the overall rating</p>
+
+  <button onclick = "location.href= 'scene3.html'" type="button" class="button">Previous Page</button>
+
+  <div class="space">
+
+  </div>
+  <button onclick="location.href = 'scene2.html'" type="button" class="button">Next Page</button>
+
+
+
+
+  <svg width = 800 height = 800>
+
+  </svg>
+  <script type="text/javascript">
+
+
+
+  async function init(){
+
+//create new dataset for nationality, average age, potential, overall
+  var nationalityData = {}
+  var d3Data = await d3.dsv(";","FIFA-21Complete.csv").then((csv) => {
+    csv.forEach(function(d){
+      var nationality = d.nationality
+      var age = parseInt(d.age)
+      var potential = parseInt(d.potential)
+      var overall = parseInt(d.overall)
+      if (nationality in nationalityData){
+        nationalityData[nationality].count+=1
+        nationalityData[nationality].totalAge+=age
+        nationalityData[nationality].totalPotential+=potential
+        nationalityData[nationality].totalOverall+=overall
+      }else{
+        nationalityData[nationality] = {"nationality":nationality,"count":1, "totalAge":age, "totalPotential":potential, "totalOverall":overall}
+      }
+    })
+    var d3Data = [];
+    Object.values(nationalityData).forEach(function(d){
+      var nationality = d.nationality
+      var count = d.count
+      var avgAge = d.totalAge/count
+      var avgPotential = d.totalPotential/count
+      var avgOverall = d.totalOverall/count
+      d3Data.push({"nationality":nationality, "avgAge":avgAge, "avgPotential":avgPotential, "avgOverall":avgOverall})
+    })
+    return d3Data
+
+  });
+
+
+//create annotations
+  const annotations = [
+    {
+    note: {
+      label: "hover over the dot to see nationality" },
+      x:400,
+      y:150,
+      dy:-50,
+      dx:50,
+      subject: {radius:50,radiusPadding:10},
+
+
+    },
+
+  ];
+  const addAnnotation = d3.annotation().annotations(annotations)
+
+//plot width and height
+  var margin = 120
+  var width = d3.select("svg").attr("width")-2*margin
+  var height = d3.select("svg").attr("height")-2*margin
+
+//x and y axis
+  var x = d3.scaleLinear().domain([18,40]).range([0, width])
+  var y = d3.scaleLinear().domain([60,80]).range([height,0])
+
+//div for tooltip
+  var div = d3.select("body").append("div").attr("class", "tooltip").style("opacity",0)
+
+
+
+//draw scatter plot
+  d3.select("svg")
+  .append("g")
+  .attr("transform","translate("+margin+","+margin+")")
+  .call(addAnnotation)
+  .selectAll("circle")
+  .data(d3Data)
+  .enter()
+  .append("circle")
+  .attr("cx", function (d) { return x(d.avgAge)} )
+  .attr("cy", function (d) { return y(d.avgPotential)} )
+  .attr("r", function(d) {return d.avgOverall-55})
+  .attr("fill", "#D3CEDF")
+  .on("mouseover", function(d){
+    d3.select(this).transition().duration("100").attr("fill","#e06666")
+    div.transition().duration("100").style("opacity",0.8)
+    div.html(d.nationality)
+      .style("left",(d3.event.x+20)+"px")
+      .style("top",(d3.event.y-20)+"px")})
+  .on("mouseout", function(d){
+    d3.select(this).transition().duration("100").attr("fill","#D3CEDF")
+    div.transition().duration("100").style("opacity",0)})
+
+
+//draw y and x axis
+  d3.select("svg").append("g").attr("transform","translate("+margin+","+margin+")").call(d3.axisLeft(y).tickValues([60,62,64,66,68,70,72,74,76,78,80]).tickFormat(d3.format("~s")))
+  .select("text")
+    .style("text-anchor", "middle")
+    .style("font", "15px times")
+    .attr("x", 300)
+    .attr("y", -60)
+    .attr("dy", "1em")
+    .attr("transform", "rotate(-90)")
+    .text("Avg.Potential")
+
+
+  d3.select("svg").append("g").attr("transform","translate("+margin+","+(height+margin)+")").call(d3.axisBottom(x).tickValues([18,20,22,24,26,28,30,32,34,36,38,40]).tickFormat(d3.format("~s")))
+  .select("text")
+    .style("text-anchor", "middle")
+    .style("font", "15px times")
+    .attr("x", 300)
+    .attr("y", 40)
+    .text("Avg.Age")
+
+}
+
+</script>
+
+
+</body>
+
+</html>
